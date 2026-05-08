@@ -1,0 +1,13 @@
+:443 {
+	tls internal
+	reverse_proxy app:3000
+
+	log {
+		output discard
+	}
+
+	header {
+		-Server
+		-X-Powered-By
+	}
+}

@@ -1,0 +1,52 @@
+services:
+  tor:
+    build:
+      context: ./tor
+    volumes:
+      - tor-keys:/var/lib/tor/hidden_service
+    networks:
+      - onionsecure
+    depends_on:
+      - caddy
+    restart: unless-stopped
+    logging:
+      driver: "none"
+
+  app:
+    build:
+      context: ./app
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      - TOR_SOCKS_HOST=tor
+      - TOR_SOCKS_PORT=9050
+    networks:
+      - onionsecure
+    restart: unless-stopped
+    logging:
+      driver: "none"
+
+  caddy:
+    image: caddy:2-alpine
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - onionsecure
+    restart: unless-stopped
+    logging:
+      driver: "none"
+
+networks:
+  onionsecure:
+    driver: bridge
+    internal: false
+
+volumes:
+  tor-keys:
+    driver: local
+  caddy-data:
+    driver: local
+  caddy-config:
+    driver: local

@@ -1,0 +1,16 @@
+# Node
+app/node_modules/
+app/.next/
+app/.env*
+
+# Docker volumes (do not commit tor keys)
+tor-keys/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
+Thumbs.db
