@@ -2,6 +2,7 @@ services:
   tor:
     build:
       context: ./tor
+      network: host
     volumes:
       - tor-keys:/var/lib/tor/hidden_service
     networks:
@@ -15,6 +16,7 @@ services:
   app:
     build:
       context: ./app
+      network: host
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
