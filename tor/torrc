@@ -4,3 +4,5 @@ HiddenServicePort 443 caddy:443
 SocksPort 0.0.0.0:9050
 Log notice stdout
 SafeLogging all
+# Only connect to Tor nodes via port 443/80 — works through restrictive firewalls/exit nodes
+ReachableAddresses *:80,*:443
