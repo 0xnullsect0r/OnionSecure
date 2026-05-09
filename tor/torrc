@@ -2,6 +2,5 @@ DataDirectory /var/lib/tor
 HiddenServiceDir /var/lib/tor/hidden_service/
 HiddenServicePort 443 caddy:443
 SocksPort 0.0.0.0:9050
-Log notice /dev/null
+Log notice stdout
 SafeLogging all
-AvoidDiskWrites 1
