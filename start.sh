@@ -16,10 +16,11 @@ docker compose up -d --build
 echo ""
 echo "Waiting for Tor hidden service to initialize..."
 
-# Poll for the onion hostname (up to 90 seconds)
+# Poll the running tor container for the hostname file (up to 90 seconds).
+# Uses exec (not run) so we connect to the already-running container without
+# triggering the entrypoint again.
 for i in $(seq 1 90); do
-  HOSTNAME=$(docker compose run --rm -T --no-deps tor sh -c \
-    'cat /var/lib/tor/hidden_service/hostname 2>/dev/null' 2>/dev/null || true)
+  HOSTNAME=$(docker compose exec -T tor cat /var/lib/tor/hidden_service/hostname 2>/dev/null || true)
 
   if [ -n "$HOSTNAME" ]; then
     echo ""

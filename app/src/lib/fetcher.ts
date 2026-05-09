@@ -67,12 +67,26 @@ export async function torFetch(
     delete headers[key];
   });
 
-  const response = await undiciFetch(url, {
-    method,
-    headers,
-    dispatcher: agent,
-    redirect: "follow",
-  } as Parameters<typeof undiciFetch>[1]);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30_000);
+
+  let response: Awaited<ReturnType<typeof undiciFetch>>;
+  try {
+    response = await undiciFetch(url, {
+      method,
+      headers,
+      dispatcher: agent,
+      redirect: "follow",
+      signal: controller.signal,
+    } as Parameters<typeof undiciFetch>[1]);
+  } catch (err) {
+    if (err instanceof Error && err.name === "AbortError") {
+      throw new Error("Request timed out after 30 seconds");
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
 
   const rawBody = Buffer.from(await response.arrayBuffer());
 

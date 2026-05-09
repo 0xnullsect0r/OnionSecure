@@ -28,6 +28,8 @@ services:
 
   caddy:
     image: caddy:2-alpine
+    depends_on:
+      - app
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data

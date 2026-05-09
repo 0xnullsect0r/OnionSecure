@@ -1,11 +1,10 @@
 import * as cheerio from "cheerio";
-import { encodeProxyUrl, resolveAndEncode } from "./utils";
+import { encodeProxyUrl } from "./utils";
 
 const PROXY_BASE = "/api/proxy?url=";
 
 /** Build the injected toolbar HTML */
 function buildToolbar(currentUrl: string): string {
-  const encoded = encodeProxyUrl(currentUrl);
   return `
 <div id="__onionsecure_toolbar__" style="
   position:fixed;top:0;left:0;right:0;z-index:2147483647;
@@ -142,8 +141,7 @@ function rewriteSrcset(srcset: string, base: string): string {
 
 /** Rewrite HTML content, injecting toolbar and rewriting all URLs */
 export function rewriteHtml(html: string, baseUrl: string): string {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const $ = cheerio.load(html, null as any);
+  const $ = cheerio.load(html);
 
   // Remove any existing base tag to avoid confusion
   $("base").remove();

@@ -12,7 +12,11 @@ export default function HomePage() {
     let target = url.trim();
     if (!target) return;
     if (!target.match(/^https?:\/\//)) target = "http://" + target;
-    const encoded = Buffer.from(target, "utf8").toString("base64url");
+    // base64url encode using browser-compatible btoa (handles UTF-8 via encodeURIComponent)
+    const encoded = btoa(unescape(encodeURIComponent(target)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=/g, "");
     router.push(`/api/proxy?url=${encoded}`);
   }
 
